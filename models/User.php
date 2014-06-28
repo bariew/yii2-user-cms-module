@@ -14,10 +14,9 @@ use Yii;
  * @property string $username
  * @property string $company_name
  * @property string $auth_key
- * api_key
+ * @property string $api_key
  * @property string $email
  * @property integer $status
- * @property integer $role
  * @property integer $created_at
  * @property integer $updated_at
  * @property string $password write-only password
@@ -28,28 +27,6 @@ class User extends ActiveRecord implements IdentityInterface
     const SALT            = 'someDefSault';
     const STATUS_INACTIVE = 0;
     const STATUS_ACTIVE   = 10;
-    const ROLE_USER  = 10;
-    const ROLE_ADMIN = 50;
-    const ROLE_ROOT  = 100;
-
-    /**
-     * gets all available user role list
-     * @return array roles
-     * @example $this->roleList() == [10=>'User', 50=>'Admin']
-     */
-    public static function roleList()
-    {
-        return [
-            self::ROLE_USER  => 'User',
-            self::ROLE_ADMIN => 'Admin',
-            self::ROLE_ROOT  => 'Root',
-        ];
-    }
-
-    public function getRoleName()
-    {
-        return self::roleList()[$this->role];
-    }
 
     /**
      * gets all available user status list
@@ -66,28 +43,6 @@ class User extends ActiveRecord implements IdentityInterface
     public function getStatusName()
     {
         return self::statusList()[$this->status];
-    }
-
-    /**
-     * checks whether user access level fits access role or upper
-     * @param integer $role access role
-     * @return boolean whether user is needed level or upper
-     */
-    public function level($role)
-    {
-        return $this->role >= $role;
-    }
-
-    /**
-     * activates users account
-     */
-    public function activate()
-    {
-        $attributes = ['status' => self::STATUS_ACTIVE];
-        if (!$this->role) {
-            $attributes['role'] = self::ROLE_USER;
-        }
-        $this->updateAttributes($attributes);
     }
 
     /**
@@ -267,8 +222,6 @@ class User extends ActiveRecord implements IdentityInterface
                 'value' => ($this->scenario == 'root') ? self::STATUS_ACTIVE : self::STATUS_INACTIVE
             ],
             ['status', 'in', 'range' => array_keys($this->statusList()), 'on' => 'root'],
-            ['role', 'default', 'value' => self::ROLE_USER],
-            ['role', 'in', 'range' => array_keys($this->roleList()), 'on' => 'root'],
             ['username', 'filter', 'filter' => 'trim'],
             [['email', 'username'], 'required'],
             [['email', 'username', 'api_key'], 'unique'],

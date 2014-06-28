@@ -19,8 +19,6 @@ use yii\widgets\ActiveForm;
 
     <?php echo $form->field($model, 'email') ?>
 
-    <?php echo $form->field($model, 'role') ?>
-
     <?php echo $form->field($model, 'username') ?>
 
     <?php // echo $form->field($model, 'company_name') ?>

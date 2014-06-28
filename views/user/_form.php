@@ -15,8 +15,6 @@ use yii\widgets\ActiveForm;
 
     <?php echo $form->field($model, 'status')->dropDownList($model->statusList()) ?>
 
-    <?php echo $form->field($model, 'role')->dropDownList($model->roleList()) ?>
-
     <?php echo $form->field($model, 'username')->textInput(['maxlength' => 255]) ?>
 
     <?php echo $form->field($model, 'company_name')->textInput(['maxlength' => 255]) ?>

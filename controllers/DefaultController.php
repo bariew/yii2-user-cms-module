@@ -2,6 +2,8 @@
 
 namespace bariew\userModule\controllers;
 
+use bariew\userModule\models\LoginForm;
+use bariew\userModule\models\RegisterForm;
 use yii\web\Controller;
 use bariew\userModule\models\User;
 use Yii;
@@ -16,7 +18,7 @@ class DefaultController extends Controller
             return $this->goHome();
         }
 
-        $model = new \bariew\userModule\models\LoginForm();
+        $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
             return $this->goBack();
         } else {
@@ -39,7 +41,7 @@ class DefaultController extends Controller
             return $this->goHome();
         }
 
-        $model = new \bariew\userModule\models\RegisterForm();
+        $model = new RegisterForm();
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             Yii::$app->session->setFlash("success", "Please check your email and confirm registration.");
             return $this->goHome();
@@ -62,7 +64,6 @@ class DefaultController extends Controller
     /**
      * Updates an existing User model.
      * If update is successful, the browser will be redirected to the 'view' page.
-     * @param string $id
      * @return mixed
      */
     public function actionUpdate()

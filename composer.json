@@ -14,5 +14,8 @@
         "psr-4": {
             "bariew\\userModule\\": ""
         }
-    }  
+    },
+    "extra": {
+        "bootstrap": "bariew\\userModule\\UserBootstrap"
+    }
 }
