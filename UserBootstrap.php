@@ -22,13 +22,12 @@ class UserBootstrap implements BootstrapInterface
      */
     public function bootstrap($app)
     {
-        \Yii::configure($app, [
+        $app->setComponents([
             'user'  => [
-                'identityClass' => 'bariew\userModule\models\User',
-                'enableAutoLogin'   => true,
+                'class'         => 'yii\web\User',
+                'identityClass' => 'bariew\userModule\models\User'
             ],
         ]);
-        
         return true;
     }
 }
