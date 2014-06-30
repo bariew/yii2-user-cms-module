@@ -20,9 +20,9 @@ class m140417_081329_user_user extends \yii\db\Migration
 
         $this->insert('user_user', array(
             'email'         => 'admin@admin.admin',
-            'password'      => 'e0afae8445b14dc6fc3b31116f113ccc544da8a9aba8c37a5dd2b4ee95c21d6c',
-            'username'      => 'pt',
-            'company_name'  => 'pt',
+            'password'      => '$2y$13$Rx7MzVUFuYsrKAE4pUksBO2r7fecmboV4MM8WZrSCPDFI3LiHSGOm',
+            'username'      => 'admin',
+            'company_name'  => 'admin',
             'status'        => 10,
             'created_at'    => time(),
         ));

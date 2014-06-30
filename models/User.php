@@ -24,7 +24,6 @@ use Yii;
 class User extends ActiveRecord implements IdentityInterface
 {
 
-    const SALT            = 'someDefSault';
     const STATUS_INACTIVE = 0;
     const STATUS_ACTIVE   = 10;
 
@@ -56,9 +55,9 @@ class User extends ActiveRecord implements IdentityInterface
     /**
      * @inheritdoc
      */
-    public static function findIdentityByAccessToken($token, $type = NULL)
+    public static function findIdentityByAccessToken($auth_key, $type = NULL)
     {
-        static::findOne(['auth_key' => $token]);
+        static::findOne(compact('auth_key'));
     }
 
     /**
@@ -126,27 +125,18 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public function validatePassword($password)
     {
-        return $this->password == self::hash2($password);
+        return $this->password == Yii::$app->security->validatePassword($password, $this->generatePassword($password));
     }
 
     /**
      * Generates password hash from password and sets it to the model
      *
-     * @param string $password
+     * @param string $password original password.
+     * @return string hashed password.
      */
-    public function setPassword($password)
+    public function generatePassword($password)
     {
-        $this->password = self::hash2($password);
-    }
-
-    /**
-     * hashes string with sha256
-     * @param string $string string to hash
-     * @return string hashed string
-     */
-    private static function hash2($string)
-    {
-        return hash('sha256', $string . self::SALT);
+        return Yii::$app->security->generatePasswordHash($password);
     }
 
     /**
@@ -154,12 +144,12 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public function generateAuthKey()
     {
-        $this->auth_key = Security::generateRandomKey();
+        $this->auth_key = Yii::$app->security->generateRandomKey();
     }
 
     public function generateApiKey()
     {
-        $this->api_key = Security::generateRandomKey();
+        $this->api_key = Yii::$app->security->generateRandomKey();
     }
 
     /**
@@ -167,7 +157,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public function generatePasswordResetToken()
     {
-        $this->password_reset_token = Security::generateRandomKey() . '_' . time();
+        $this->password_reset_token = Yii::$app->security->generateRandomKey() . '_' . time();
     }
 
     /**
@@ -191,7 +181,7 @@ class User extends ActiveRecord implements IdentityInterface
                 $this->generateApiKey();
             }
             $this->generateAuthKey();
-            $this->setPassword($this['password']);
+            $this->password = $this->generatePassword($this['password']);
         }
         return true;
     }
