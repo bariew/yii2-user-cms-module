@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'menu'  => (Yii::$app->user->isGuest)
+    'menu'  => (!(Yii::$app instanceof \yii\web\Application) || Yii::$app->user->isGuest)
         ? ['label'    => 'Login', 'url' => ['/user/default/login']]
         : [
             'label'    => Yii::$app->user->identity->username,
