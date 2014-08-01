@@ -8,7 +8,7 @@ use yii\widgets\DetailView;
  * @var bariew\userModule\models\User $model
  */
 
-$this->title = $model->id;
+$this->title = 'User #' . $model->id;
 $this->params['breadcrumbs'][] = ['label' => 'Users', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
@@ -30,14 +30,12 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php echo DetailView::widget([
         'model' => $model,
         'attributes' => [
-            'id',
             'email:email',
-            'password',
             'username',
             'company_name',
             'statusName',
-            'created_at',
-            'updated_at',
+            'created_at:datetime',
+            'updated_at:datetime',
         ],
     ]) ?>
 

@@ -208,9 +208,7 @@ class User extends ActiveRecord implements IdentityInterface
     public function rules()
     {
         return [
-            ['status', 'default',
-                'value' => ($this->scenario == 'root') ? self::STATUS_ACTIVE : self::STATUS_INACTIVE
-            ],
+            ['status', 'default', 'value' => self::STATUS_ACTIVE],
             ['status', 'in', 'range' => array_keys($this->statusList()), 'on' => 'root'],
             ['username', 'filter', 'filter' => 'trim'],
             [['email', 'username'], 'required'],
