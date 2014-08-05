@@ -7,8 +7,9 @@
 
 namespace bariew\userModule;
 
+use Yii;
 use yii\base\BootstrapInterface;
-use yii\base\Application;
+use yii\web\Application;
 
 /**
  * Bootstrap class initiates external modules.
@@ -17,17 +18,34 @@ use yii\base\Application;
  */
 class UserBootstrap implements BootstrapInterface
 {
+    public static $userIdentityClass = 'bariew\userModule\models\User';
+
     /**
      * @inheritdoc
      */
     public function bootstrap($app)
     {
-        $app->setComponents([
+        if (!$app instanceof Application) {
+            return true;
+        }
+        self::setUser();
+        return true;
+    }
+
+
+    public static function getUser()
+    {
+        self::setUser();
+        return Yii::$app->user;
+    }
+
+    public static function setUser()
+    {
+        Yii::$app->setComponents([
             'user'  => [
                 'class'         => 'yii\web\User',
-                'identityClass' => 'bariew\userModule\models\User'
+                'identityClass' => self::$userIdentityClass
             ],
         ]);
-        return true;
     }
 }
