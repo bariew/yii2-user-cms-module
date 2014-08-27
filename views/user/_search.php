@@ -21,17 +21,9 @@ use yii\widgets\ActiveForm;
 
     <?php echo $form->field($model, 'username') ?>
 
-    <?php // echo $form->field($model, 'company_name') ?>
-
-    <?php // echo $form->field($model, 'status') ?>
-
-    <?php // echo $form->field($model, 'created_at') ?>
-
-    <?php // echo $form->field($model, 'updated_at') ?>
-
     <div class="form-group">
-        <?php echo Html::submitButton('Search', ['class' => 'btn btn-primary']) ?>
-        <?php echo Html::resetButton('Reset', ['class' => 'btn btn-default']) ?>
+        <?php echo Html::submitButton(Yii::t('modules/user', 'Search'), ['class' => 'btn btn-primary']) ?>
+        <?php echo Html::resetButton(Yii::t('modules/user', 'Reset'), ['class' => 'btn btn-default']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

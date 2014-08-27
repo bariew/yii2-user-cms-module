@@ -1,10 +1,11 @@
 <?php
+use bariew\userModule\models\User;
 
 class m140417_081329_user_user extends \yii\db\Migration
 {
     public function up()
     {
-        $this->createTable('user_user', array(
+        $this->createTable(User::tableName(), array(
             'id'            => 'pk',
             'email'         => 'string',
             'password'      => 'string',
@@ -18,7 +19,7 @@ class m140417_081329_user_user extends \yii\db\Migration
             'password_reset_token'=>'string',
         ));
 
-        $this->insert('user_user', array(
+        return $this->insert(User::tableName(), array(
             'id'            => 1,
             'email'         => 'admin@admin.admin',
             'password'      => '$2y$13$Rx7MzVUFuYsrKAE4pUksBO2r7fecmboV4MM8WZrSCPDFI3LiHSGOm',
@@ -31,6 +32,6 @@ class m140417_081329_user_user extends \yii\db\Migration
 
     public function down()
     {
-        return $this->dropTable('user_user');
+        return $this->dropTable(User::tableName());
     }
 }

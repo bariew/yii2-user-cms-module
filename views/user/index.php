@@ -9,17 +9,15 @@ use yii\grid\GridView;
  * @var bariew\userModule\models\UserSearch $searchModel
  */
 
-$this->title = 'Users';
+$this->title = Yii::t('modules/user', 'Users');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="user-index">
 
     <h1><?php echo Html::encode($this->title) ?></h1>
 
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-
     <p>
-        <?php echo Html::a('Create User', ['create'], ['class' => 'btn btn-success']) ?>
+        <?php echo Html::a(Yii::t('modules/user', 'Create User'), ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?php echo GridView::widget([
@@ -27,14 +25,8 @@ $this->params['breadcrumbs'][] = $this->title;
         'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-
             'email:email',
             'username',
-            // 'company_name',
-            // 'status',
-            // 'created_at',
-            // 'updated_at',
-
             ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>

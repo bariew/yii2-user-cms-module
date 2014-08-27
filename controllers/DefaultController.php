@@ -43,7 +43,10 @@ class DefaultController extends Controller
 
         $model = new RegisterForm();
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            Yii::$app->session->setFlash("success", "Please check your email and confirm registration.");
+            Yii::$app->session->setFlash("success", Yii::$app->user->isGuest
+                ? Yii::t('modules/user', 'Please confirm registration email!')
+                : Yii::t('modules/user', 'Registration completed!')
+            );
             return $this->goHome();
         }
         return $this->render('register', compact('model'));
@@ -51,12 +54,12 @@ class DefaultController extends Controller
     
     public function actionConfirm($auth_key)
     {
-        if ($user = User::findOne(compact('auth_key'))) {
-            Yii::$app->session->setFlash("success", "You have successfuly completed your registration.");
+        if ($auth_key && $user = User::findOne(compact('auth_key'))) {
+            Yii::$app->session->setFlash("success", Yii::t('modules/user', "You have successfully completed your registration."));
             Yii::$app->user->login($user);
             $user->activate();
         }else{
-            Yii::$app->session->setFlash("danger", "Your auth link is invalid.");
+            Yii::$app->session->setFlash("danger", Yii::t('modules/user', "Your auth link is invalid."));
         }
         return $this->goHome();
     }
@@ -69,11 +72,11 @@ class DefaultController extends Controller
     public function actionUpdate()
     {
         if (!$model = Yii::$app->user->identity) {
-            Yii::$app->session->setFlash("danger", "You are not logged in.");
+            Yii::$app->session->setFlash("danger", Yii::t('modules/user', "You are not logged in."));
             $this->goHome();
         }
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            Yii::$app->session->setFlash("success", "Changes has been saved.");
+            Yii::$app->session->setFlash("success", Yii::t('modules/user', "Changes has been saved."));
             return $this->refresh();
         } else {
             return $this->render('update', [

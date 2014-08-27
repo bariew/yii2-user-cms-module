@@ -44,6 +44,13 @@ class User extends ActiveRecord implements IdentityInterface
         return self::statusList()[$this->status];
     }
 
+    public function activate()
+    {
+        $this->updateAttributes([
+            'status' => self::STATUS_ACTIVE,
+            'auth_key' => null
+        ]);
+    }
     /**
      * @inheritdoc
      */
@@ -144,12 +151,12 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public function generateAuthKey()
     {
-        $this->auth_key = Yii::$app->security->generateRandomKey();
+        return $this->auth_key = md5(Yii::$app->security->generateRandomKey());
     }
 
     public function generateApiKey()
     {
-        $this->api_key = Yii::$app->security->generateRandomKey();
+        return $this->api_key = md5(Yii::$app->security->generateRandomKey());
     }
 
     /**
@@ -157,7 +164,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public function generatePasswordResetToken()
     {
-        $this->password_reset_token = Yii::$app->security->generateRandomKey() . '_' . time();
+        $this->password_reset_token = md5(Yii::$app->security->generateRandomKey()) . '_' . time();
     }
 
     /**
@@ -176,7 +183,7 @@ class User extends ActiveRecord implements IdentityInterface
         if (!parent::beforeSave($insert)) {
             return false;
         }
-        if ($this->isNewRecord) {
+        if ($insert) {
             if (!$this->api_key) {
                 $this->generateApiKey();
             }
@@ -225,17 +232,17 @@ class User extends ActiveRecord implements IdentityInterface
     public function attributeLabels()
     {
         return [
-            'email'        => Yii::t('app', 'Email'),
-            'username'     => Yii::t('app', 'Login'),
-            'company_name' => Yii::t('app', 'Company name'),
-            'auth_key'     => Yii::t('app', 'Auth key'),
-            'api_key'      => Yii::t('app', 'Api key'),
+            'email'        => Yii::t('modules/user', 'Email'),
+            'username'     => Yii::t('modules/user', 'Login'),
+            'company_name' => Yii::t('modules/user', 'Company name'),
+            'auth_key'     => Yii::t('modules/user', 'Auth key'),
+            'api_key'      => Yii::t('modules/user', 'Api key'),
         ];
     }
 
     public static function tableName()
     {
-        return 'user_user';
+        return '{{user_user}}';
     }
 
 }

@@ -1,7 +1,7 @@
 <?php
 Yii::setAlias('@bariew/userModule', __DIR__.'/../');
-
-return [
+$localPath = __DIR__ . DIRECTORY_SEPARATOR . 'params-local.php';
+return array_merge([
     'menu'  => (!(Yii::$app instanceof \yii\web\Application) || \bariew\userModule\UserBootstrap::getUser()->isGuest)
         ? ['label'    => 'Login', 'url' => ['/user/default/login']]
         : [
@@ -11,5 +11,6 @@ return [
                 ['label'    => 'Logout', 'url' => ['/user/default/logout']],
                 ['label'    => 'All users', 'url' => ['/user/user/index']]
             ]
-        ]
-];
+        ],
+    'emailConfirm' => false
+], (file_exists($localPath) ? require $localPath : []));

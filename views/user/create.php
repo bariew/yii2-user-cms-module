@@ -7,8 +7,8 @@ use yii\helpers\Html;
  * @var bariew\userModule\models\User $model
  */
 
-$this->title = 'Create User';
-$this->params['breadcrumbs'][] = ['label' => 'Users', 'url' => ['index']];
+$this->title = Yii::t('modules/user', 'Create User');
+$this->params['breadcrumbs'][] = ['label' => Yii::t('modules/user', 'Users'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="user-create">

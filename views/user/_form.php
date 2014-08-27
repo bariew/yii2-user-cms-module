@@ -24,7 +24,9 @@ use yii\widgets\ActiveForm;
     <?php echo $form->field($model, 'email')->textInput(['maxlength' => 255]) ?>
 
     <div class="form-group">
-        <?php echo Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+        <?php echo Html::submitButton($model->isNewRecord
+                ? Yii::t('modules/user', 'Create') : Yii::t('modules/user', 'Update'),
+            ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

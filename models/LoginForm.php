@@ -31,6 +31,16 @@ class LoginForm extends Model
         ];
     }
 
+    public function attributeLabels()
+    {
+        return [
+            'active'    => Yii::t('modules/user', 'Active'),
+            'username'    => Yii::t('modules/user', 'Username'),
+            'rememberMe'    => Yii::t('modules/user', 'Remember me'),
+            'active'    => Yii::t('modules/user', 'Active'),
+        ];
+    }
+
     /**
      * Validates the password.
      * This method serves as the inline validation for password.
@@ -48,11 +58,12 @@ class LoginForm extends Model
 
     /**
      * Logs in a user using the provided username and password.
+     * @param bool $validate
      * @return boolean whether the user is logged in successfully
      */
-    public function login()
+    public function login($validate = true)
     {
-        if ($this->validate()) {
+        if (!$validate || $this->validate()) {
             return Yii::$app->user->login($this->getUser(), $this->rememberMe ? 3600*24*30 : 0);
         } else {
             return false;
