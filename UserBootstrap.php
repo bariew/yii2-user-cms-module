@@ -7,6 +7,7 @@
 
 namespace bariew\userModule;
 
+use bariew\userModule\models\User;
 use Yii;
 use yii\base\BootstrapInterface;
 use yii\web\Application;
@@ -37,6 +38,20 @@ class UserBootstrap implements BootstrapInterface
     {
         self::setUser();
         return Yii::$app->user;
+    }
+
+    public static function hasUser()
+    {
+        if (!(Yii::$app instanceof Application)) {
+            return false;
+        }
+        if (!Yii::$app->db->isActive) {
+            return false;
+        }
+        if (!Yii::$app->db->getTableSchema(User::tableName())) {
+            return false;
+        }
+        return !self::getUser()->isGuest;
     }
 
     public static function setUser()
