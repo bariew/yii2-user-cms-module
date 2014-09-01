@@ -12,5 +12,6 @@ return array_merge([
                 ['label'    => 'All users', 'url' => ['/user/user/index']]
             ]
         ],
-    'emailConfirm' => false
+    'emailConfirm' => false,
+    'resetTokenExpireSeconds' => 24*60*60
 ], (file_exists($localPath) ? require $localPath : []));
