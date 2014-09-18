@@ -1,6 +1,9 @@
 <?php
 
 namespace bariew\userModule;
+use Yii;
+use bariew\userModule\models\User;
+use yii\web\Application;
 
 class Module extends \yii\base\Module
 {
@@ -18,4 +21,29 @@ class Module extends \yii\base\Module
         // custom initialization code goes here
     }
 
+    public static function hasUser()
+    {
+
+        if (!(Yii::$app instanceof Application)) {
+            return false;
+        }
+
+        if (!Yii::$app->db->isActive) {
+           // return false;
+        }
+        if (!Yii::$app->db->getTableSchema(User::tableName())) {
+            return false;
+        }
+        try {
+            $identityClass = Yii::$app->user->identityClass;
+        } catch (\Exception $e) {
+            $identityClass = false;
+        }
+
+        if (!$identityClass) {
+            return false;
+        }
+
+        return !Yii::$app->user->isGuest;
+    }
 }

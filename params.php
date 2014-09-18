@@ -2,7 +2,7 @@
 Yii::setAlias('@bariew/userModule', __DIR__.'/../');
 $localPath = __DIR__ . DIRECTORY_SEPARATOR . 'params-local.php';
 return array_merge([
-    'menu'  => (!\bariew\userModule\UserBootstrap::hasUser())
+    'menu'  => (!\bariew\userModule\Module::hasUser())
         ? ['label'    => 'Login', 'url' => ['/user/default/login']]
         : [
             'label'    => Yii::$app->user->identity->username,
