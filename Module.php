@@ -29,7 +29,7 @@ class Module extends \yii\base\Module
         }
 
         if (!Yii::$app->db->isActive) {
-           // return false;
+            return false;
         }
         if (!Yii::$app->db->getTableSchema(User::tableName())) {
             return false;
