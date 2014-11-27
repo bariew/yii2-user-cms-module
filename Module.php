@@ -11,7 +11,20 @@ class Module extends \yii\base\Module
 
     public function getParams()
     {
-        return require_once __DIR__ . DIRECTORY_SEPARATOR . 'params.php';
+        return [
+            'menu'  => (!\bariew\userModule\Module::hasUser())
+                ? ['label'    => 'Login', 'url' => ['/user/default/login']]
+                : [
+                    'label'    => Yii::$app->user->identity->username,
+                    'items' => [
+                        ['label'    => 'Profile', 'url' => ['/user/default/update']],
+                        ['label'    => 'Logout', 'url' => ['/user/default/logout']],
+                        ['label'    => 'All users', 'url' => ['/user/user/index']]
+                    ]
+                ],
+            'emailConfirm' => false,
+            'resetTokenExpireSeconds' => 24*60*60
+        ];
     }
 
     public function init()
