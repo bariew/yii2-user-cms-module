@@ -9,9 +9,12 @@ class Module extends \yii\base\Module
 {
     public $controllerNamespace = 'bariew\userModule\controllers';
 
-    public function getParams()
+    public $params = [];
+
+
+    public function init()
     {
-        return [
+        $this->params = [
             'menu'  => (!\bariew\userModule\Module::hasUser())
                 ? ['label'    => 'Login', 'url' => ['/user/default/login']]
                 : [
@@ -25,10 +28,6 @@ class Module extends \yii\base\Module
             'emailConfirm' => false,
             'resetTokenExpireSeconds' => 24*60*60
         ];
-    }
-
-    public function init()
-    {
         parent::init();
 
         // custom initialization code goes here
