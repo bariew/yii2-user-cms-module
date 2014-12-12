@@ -1,6 +1,7 @@
 <?php
 
 namespace bariew\userModule;
+use app\config\ConfigManager;
 use Yii;
 use bariew\userModule\models\User;
 use yii\web\Application;
@@ -29,10 +30,12 @@ class Module extends \yii\base\Module
             'resetTokenExpireSeconds' => 24*60*60
         ];
         parent::init();
-
-        // custom initialization code goes here
     }
 
+    /**
+     * We just check whether module is installed and user is logged in.
+     * @return bool
+     */
     public static function hasUser()
     {
 
@@ -57,5 +60,15 @@ class Module extends \yii\base\Module
         }
 
         return !Yii::$app->user->isGuest;
+    }
+
+    public function install()
+    {
+        ConfigManager::set(['components', 'user', 'identityClass'], User::className());
+    }
+
+    public function uninstall()
+    {
+        ConfigManager::set(['components', 'user', 'identityClass'], '');
     }
 }
