@@ -42,10 +42,6 @@ class Module extends \yii\base\Module
         if (!(Yii::$app instanceof Application)) {
             return false;
         }
-
-        if (!Yii::$app->db->isActive) {
-            return false;
-        }
         if (!Yii::$app->db->getTableSchema(User::tableName())) {
             return false;
         }
