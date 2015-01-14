@@ -1,7 +1,6 @@
 <?php
 
 namespace bariew\userModule;
-use app\config\ConfigManager;
 use Yii;
 use bariew\userModule\models\User;
 use yii\web\Application;
@@ -60,11 +59,11 @@ class Module extends \yii\base\Module
 
     public function install()
     {
-        ConfigManager::set(['components', 'user', 'identityClass'], User::className());
+        \app\config\ConfigManager::set(['components', 'user', 'identityClass'], User::className());
     }
 
     public function uninstall()
     {
-        ConfigManager::set(['components', 'user', 'identityClass'], '');
+        \app\config\ConfigManager::set(['components', 'user', 'identityClass'], '');
     }
 }
