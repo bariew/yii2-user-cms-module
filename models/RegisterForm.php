@@ -1,9 +1,17 @@
 <?php
+/**
+ * RegisterForm class file.
+ * @copyright (c) 2015, Pavel Bariev
+ * @license http://www.opensource.org/licenses/bsd-license.php
+ */
 
 namespace bariew\userModule\models;
-
+ 
 /**
- * LoginForm is the model behind the login form.
+ * Form for user registration.
+ * 
+ * 
+ * @author Pavel Bariev <bariew@yandex.ru>
  */
 class RegisterForm extends User
 {
@@ -15,14 +23,15 @@ class RegisterForm extends User
     public function rules()
     {
         return [
-            // username and password are both required
-            [['status'], 'default', 'value' =>
-                \Yii::$app->getModule('user')->params['emailConfirm'] ? User::STATUS_INACTIVE : User::STATUS_ACTIVE
-            ],
+            [['status'], 'filter', 'filter' => function() {
+                return \Yii::$app->getModule('user')->params['emailConfirm'] 
+                    ? User::STATUS_INACTIVE 
+                    : User::STATUS_ACTIVE;
+            }],
             [['email', 'username'], 'unique'],
             ['email', 'email'],
-            [['email', 'username', 'password', 'company_name', 'password_repeat'], 'required'],
-            [['username', 'password', 'company_name', 'password_repeat'], 'string', 'min' => 2, 'max' => 255],
+            [['email', 'username', 'password', 'password_repeat'], 'required'],
+            [['username', 'password', 'password_repeat'], 'string', 'min' => 2, 'max' => 255],
             ['password_repeat', 'rulePassword', 'message'=>'Incorrect username or password.'],
         ];
     }
@@ -38,10 +47,15 @@ class RegisterForm extends User
         }
     }
 
+    /**
+     * Logs user in after registration.
+     * @param boolean $insert
+     * @param array $changedAttributes
+     */
     public function afterSave($insert, $changedAttributes)
     {
         parent::afterSave($insert, $changedAttributes);
-        if ($insert && !\Yii::$app->getModule('user')->params['emailConfirm']) {
+        if ($this->isActive()) {
             $loginForm = new LoginForm(['username' => $this->username]);
             $loginForm->login(false);
         }

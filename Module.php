@@ -9,25 +9,27 @@ class Module extends \yii\base\Module
 {
     public $controllerNamespace = 'bariew\userModule\controllers';
 
-    public $params = [];
+    public $params = [
+        'emailConfirm' => false,
+        'resetTokenExpireSeconds' => 86400 // one day
+    ];
 
 
     public function init()
     {
-        $this->params = [
-            'menu'  => (!\bariew\userModule\Module::hasUser())
-                ? ['label'    => 'Login', 'url' => ['/user/default/login']]
-                : [
-                    'label'    => Yii::$app->user->identity->username,
-                    'items' => [
-                        ['label'    => 'Profile', 'url' => ['/user/default/update']],
-                        ['label'    => 'Logout', 'url' => ['/user/default/logout']],
-                        ['label'    => 'All users', 'url' => ['/user/user/index']]
-                    ]
-                ],
-            'emailConfirm' => false,
-            'resetTokenExpireSeconds' => 24*60*60
-        ];
+        $this->params['menu'] = (!\bariew\userModule\Module::hasUser())
+            ? [
+                  'label'    => 'Login', 
+                  'url' => ['/user/default/login']
+              ]
+            : [
+                  'label'    => Yii::$app->user->identity->username,
+                  'items' => [
+                      ['label'    => 'Profile', 'url' => ['/user/default/update']],
+                      ['label'    => 'Logout', 'url' => ['/user/default/logout']],
+                      ['label'    => 'All users', 'url' => ['/user/user/index']]
+                  ]
+              ];
         parent::init();
     }
 

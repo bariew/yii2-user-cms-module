@@ -1,12 +1,20 @@
 <?php
+/**
+ * LoginForm class file.
+ * @copyright (c) 2015, Pavel Bariev
+ * @license http://www.opensource.org/licenses/bsd-license.php
+ */
 
 namespace bariew\userModule\models;
 
 use Yii;
 use yii\base\Model;
-
+ 
 /**
- * LoginForm is the model behind the login form.
+ * For user login form.
+ * 
+ * 
+ * @author Pavel Bariev <bariew@yandex.ru>
  */
 class LoginForm extends Model
 {
@@ -17,7 +25,7 @@ class LoginForm extends Model
     private $_user = false;
 
     /**
-     * @return array the validation rules.
+     * @inheritdoc
      */
     public function rules()
     {
@@ -31,6 +39,9 @@ class LoginForm extends Model
         ];
     }
 
+    /**
+     * @inheritdoc
+     */
     public function attributeLabels()
     {
         return [

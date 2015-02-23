@@ -1,15 +1,22 @@
 <?php
+/**
+ * User class file.
+ * @copyright (c) 2015, Pavel Bariev
+ * @license http://www.opensource.org/licenses/bsd-license.php
+ */
 
 namespace bariew\userModule\models;
 
 use yii\db\ActiveRecord;
-use yii\helpers\Security;
 use yii\web\IdentityInterface;
 use Yii;
-
+ 
 /**
- * User model
- *
+ * Application user model.
+ * 
+ * 
+ * @author Pavel Bariev <bariew@yandex.ru>
+ * 
  * @property integer $id
  * @property string $username
  * @property string $company_name
@@ -34,23 +41,87 @@ class User extends ActiveRecord implements IdentityInterface
     public static function statusList()
     {
         return [
-            self::STATUS_INACTIVE => 'Deactivated',
-            self::STATUS_ACTIVE   => 'Active'
+            self::STATUS_INACTIVE => Yii::t('modules/user', 'Deactivated'),
+            self::STATUS_ACTIVE   => Yii::t('modules/user', 'Active')
         ];
     }
 
+    /**
+     * Gets model readabe status name.
+     * @return string
+     */
     public function getStatusName()
     {
         return self::statusList()[$this->status];
     }
 
+    /**
+     * Activetes user.
+     * @return boolean
+     */
     public function activate()
     {
-        $this->updateAttributes([
+        return $this->updateAttributes([
             'status' => self::STATUS_ACTIVE,
             'auth_key' => null
         ]);
     }
+    
+    /**
+     * 
+     * @return type
+     */
+    public function isActive()
+    {
+        return $this->status == self::STATUS_ACTIVE;
+    }
+    
+    /**
+     * @inheritdoc
+     */
+    public function behaviors()
+    {
+        return [
+            \yii\behaviors\TimestampBehavior::className(),
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function rules()
+    {
+        return [
+            ['status', 'default', 'value' => self::STATUS_ACTIVE],
+            ['status', 'in', 'range' => array_keys($this->statusList()), 'on' => 'root'],
+            ['username', 'filter', 'filter' => 'trim'],
+            [['email', 'username'], 'required'],
+            [['email', 'username', 'api_key'], 'unique'],
+            [['username', 'company_name', 'password'], 'string', 'min' => 2, 'max' => 255],
+            ['email', 'filter', 'filter' => 'trim'],
+            ['email', 'email'],
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function attributeLabels()
+    {
+        return [
+            'email'        => Yii::t('modules/user', 'Email'),
+            'username'     => Yii::t('modules/user', 'Login'),
+            'company_name' => Yii::t('modules/user', 'Company name'),
+            'auth_key'     => Yii::t('modules/user', 'Auth key'),
+            'api_key'      => Yii::t('modules/user', 'Api key'),
+        ];
+    }
+
+    public static function tableName()
+    {
+        return '{{user_user}}';
+    }
+    
     /**
      * @inheritdoc
      */
@@ -192,57 +263,4 @@ class User extends ActiveRecord implements IdentityInterface
         }
         return true;
     }
-
-    /**
-     * @inheritdoc
-     */
-    public function behaviors()
-    {
-        return [
-            'timestamp' => [
-                'class'      => 'yii\behaviors\TimestampBehavior',
-                'attributes' => [
-                    self::EVENT_BEFORE_INSERT => ['created_at', 'updated_at'],
-                    self::EVENT_BEFORE_UPDATE => ['updated_at'],
-                ],
-            ],
-        ];
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function rules()
-    {
-        return [
-            ['status', 'default', 'value' => self::STATUS_ACTIVE],
-            ['status', 'in', 'range' => array_keys($this->statusList()), 'on' => 'root'],
-            ['username', 'filter', 'filter' => 'trim'],
-            [['email', 'username'], 'required'],
-            [['email', 'username', 'api_key'], 'unique'],
-            [['username', 'company_name', 'password'], 'string', 'min' => 2, 'max' => 255],
-            ['email', 'filter', 'filter' => 'trim'],
-            ['email', 'email'],
-        ];
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function attributeLabels()
-    {
-        return [
-            'email'        => Yii::t('modules/user', 'Email'),
-            'username'     => Yii::t('modules/user', 'Login'),
-            'company_name' => Yii::t('modules/user', 'Company name'),
-            'auth_key'     => Yii::t('modules/user', 'Auth key'),
-            'api_key'      => Yii::t('modules/user', 'Api key'),
-        ];
-    }
-
-    public static function tableName()
-    {
-        return '{{user_user}}';
-    }
-
 }

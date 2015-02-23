@@ -27,16 +27,17 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php echo $form->field($model, 'email') ?>
     
     <?php echo $form->field($model, 'username') ?>
-    
-    <?php echo $form->field($model, 'company_name') ?>
-    
+        
     <?php echo $form->field($model, 'password')->passwordInput() ?>
     
     <?php echo $form->field($model, 'password_repeat')->passwordInput() ?>
 
     <div class="form-group">
         <div class="col-lg-offset-1 col-lg-11">
-            <?php echo Html::submitButton('Register', ['class' => 'btn btn-primary', 'name' => 'register-button']) ?>
+            <?php echo Html::submitButton(
+                \Yii::t('modules/user', 'Register'), 
+                ['class' => 'btn btn-primary', 'name' => 'register-button']
+            ) ?>
         </div>
     </div>
 

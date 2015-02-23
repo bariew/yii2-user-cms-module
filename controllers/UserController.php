@@ -1,4 +1,9 @@
 <?php
+/**
+ * UserController class file.
+ * @copyright (c) 2015, Pavel Bariev
+ * @license http://www.opensource.org/licenses/bsd-license.php
+ */
 
 namespace bariew\userModule\controllers;
 
@@ -7,9 +12,12 @@ use bariew\userModule\models\User;
 use bariew\userModule\models\UserSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-
+ 
 /**
  * UserController implements the CRUD actions for User model.
+ * 
+ * 
+ * @author Pavel Bariev <bariew@yandex.ru>
  */
 class UserController extends Controller
 {

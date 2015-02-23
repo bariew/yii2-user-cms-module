@@ -1,4 +1,9 @@
 <?php
+/**
+ * DefaultController class file.
+ * @copyright (c) 2015, Pavel Bariev
+ * @license http://www.opensource.org/licenses/bsd-license.php
+ */
 
 namespace bariew\userModule\controllers;
 
@@ -7,27 +12,36 @@ use bariew\userModule\models\RegisterForm;
 use yii\web\Controller;
 use bariew\userModule\models\User;
 use Yii;
-
+ 
+/**
+ * Default controller for all users.
+ * 
+ * 
+ * @author Pavel Bariev <bariew@yandex.ru>
+ */
 class DefaultController extends Controller
 {
-    public $modelClass = 'User';
-    
+    /**
+     * Renders login form.
+     * @return string view.
+     */
     public function actionLogin()
     {
         if (!\Yii::$app->user->isGuest) {
             return $this->goHome();
         }
-
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
             return $this->goBack();
-        } else {
-            return $this->render('login', [
-                'model' => $model,
-            ]);
         }
+        
+        return $this->render('login', compact('model'));
     }
 
+    /**
+     * Logs user out and redirects to homepage.
+     * @return string view.
+     */
     public function actionLogout()
     {
         Yii::$app->user->logout();
@@ -35,6 +49,10 @@ class DefaultController extends Controller
         return $this->goHome();
     }
     
+    /**
+     * Registers user.
+     * @return string view.
+     */
     public function actionRegister()
     {
         if (!\Yii::$app->user->isGuest) {
@@ -52,6 +70,11 @@ class DefaultController extends Controller
         return $this->render('register', compact('model'));
     }
     
+    /**
+     * For registration confirmation by email auth link.
+     * @param string $auth_key user authorization key.
+     * @return string view.
+     */
     public function actionConfirm($auth_key)
     {
         if ($auth_key && $user = User::findOne(compact('auth_key'))) {
@@ -59,7 +82,7 @@ class DefaultController extends Controller
             Yii::$app->user->login($user);
             $user->activate();
         }else{
-            Yii::$app->session->setFlash("danger", Yii::t('modules/user', "Your auth link is invalid."));
+            Yii::$app->session->setFlash("error", Yii::t('modules/user', "Your auth link is invalid."));
         }
         return $this->goHome();
     }
@@ -72,7 +95,7 @@ class DefaultController extends Controller
     public function actionUpdate()
     {
         if (!$model = Yii::$app->user->identity) {
-            Yii::$app->session->setFlash("danger", Yii::t('modules/user', "You are not logged in."));
+            Yii::$app->session->setFlash("error", Yii::t('modules/user', "You are not logged in."));
             $this->goHome();
         }
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -83,12 +106,5 @@ class DefaultController extends Controller
                 'model' => $model,
             ]);
         }
-    }
-    /**
-     * @example $this->get("http://blacklist.dev/user/default/test") == '{"code":200,"message":"OK"}'
-     */
-    public function actionTest()
-    {
-        echo json_encode(['code'=>200, 'message'=>'OK']);
     }
 }
