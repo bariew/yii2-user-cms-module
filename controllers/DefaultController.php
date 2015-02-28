@@ -77,7 +77,8 @@ class DefaultController extends Controller
      */
     public function actionConfirm($auth_key)
     {
-        if ($auth_key && $user = User::findOne(compact('auth_key'))) {
+        $model = $this->findModel(true);
+        if ($auth_key && $user = $model::findOne(compact('auth_key'))) {
             Yii::$app->session->setFlash("success", Yii::t('modules/user', "You have successfully completed your registration."));
             Yii::$app->user->login($user);
             $user->activate();
@@ -94,7 +95,7 @@ class DefaultController extends Controller
      */
     public function actionUpdate()
     {
-        if (!$model = Yii::$app->user->identity) {
+        if (!$model = $this->findModel()) {
             Yii::$app->session->setFlash("error", Yii::t('modules/user', "You are not logged in."));
             $this->goHome();
         }
@@ -106,5 +107,16 @@ class DefaultController extends Controller
                 'model' => $model,
             ]);
         }
+    }
+    
+    /**
+     * Finds user model.
+     * @param boolean $new
+     * @return User
+     */
+    public function findModel($new = false)
+    {
+        $class = \Yii::$app->user->identityClass;
+        return $new === true ? new $class() : Yii::$app->user->identity;
     }
 }

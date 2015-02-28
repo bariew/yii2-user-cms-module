@@ -7,8 +7,6 @@ use yii\web\Application;
 
 class Module extends \yii\base\Module
 {
-    public $controllerNamespace = 'bariew\userModule\controllers';
-
     public $params = [
         'emailConfirm' => false,
         'resetTokenExpireSeconds' => 86400 // one day
