@@ -27,7 +27,7 @@ class UserController extends Controller
      */
     public function actionIndex()
     {
-        $searchModel = new UserSearch;
+        $searchModel = $this->findModel(null, true);
         $dataProvider = $searchModel->search(Yii::$app->request->getQueryParams());
 
         return $this->render('index', [
@@ -105,12 +105,18 @@ class UserController extends Controller
      * @return User the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
-    protected function findModel($id)
+    protected function findModel($id, $search = false)
     {
+        if ($search) {
+            return new UserSearch();
+        }
+        if (!$id) {
+            return new User();
+        }
         if (($model = User::findOne($id)) !== null) {
             return $model;
         } else {
-            throw new NotFoundHttpException('The requested page does not exist.');
+            throw new NotFoundHttpException(\Yii::t('modules/user', 'User not found'));
         }
     }
 }
