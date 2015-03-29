@@ -21,21 +21,26 @@ use Yii;
  */
 class DefaultController extends Controller
 {
+    public $loginRedirect;
     /**
      * Renders login form.
      * @return string view.
      */
-    public function actionLogin()
+    public function actionLogin($view = 'login', $partial = false)
     {
         if (!\Yii::$app->user->isGuest) {
             return $this->goHome();
         }
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
+            return ($url = $this->loginRedirect)
+                ? $this->redirect($url) 
+                : $this->goBack();
         }
-        
-        return $this->render('login', compact('model'));
+        if (\Yii::$app->request->isAjax || $partial) {
+            return $this->renderAjax($view, compact('model'));
+        }
+        return $this->render($view, compact('model'));
     }
 
     /**
@@ -65,7 +70,9 @@ class DefaultController extends Controller
                 ? Yii::t('modules/user', 'Please confirm registration email!')
                 : Yii::t('modules/user', 'Registration completed!')
             );
-            return $this->goHome();
+            return (($url = $this->loginRedirect) && !Yii::$app->user->isGuest) 
+                ? $this->redirect($url) 
+                : $this->goBack();
         }
         return $this->render('register', compact('model'));
     }
