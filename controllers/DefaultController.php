@@ -21,7 +21,15 @@ use Yii;
  */
 class DefaultController extends Controller
 {
-    public $loginRedirect;
+    /**
+     * Url for redirecting after login
+     * @return null
+     */
+    public function getLoginRedirect()
+    {
+        return null;
+    }
+
     /**
      * Renders login form.
      * @return string view.
@@ -33,7 +41,7 @@ class DefaultController extends Controller
         }
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return ($url = $this->loginRedirect)
+            return ($url = $this->getLoginRedirect())
                 ? $this->redirect($url) 
                 : $this->goBack();
         }
@@ -70,7 +78,7 @@ class DefaultController extends Controller
                 ? Yii::t('modules/user', 'Please confirm registration email!')
                 : Yii::t('modules/user', 'Registration completed!')
             );
-            return (($url = $this->loginRedirect) && !Yii::$app->user->isGuest) 
+            return (($url = $this->getLoginRedirect()) && !Yii::$app->user->isGuest)
                 ? $this->redirect($url) 
                 : $this->goBack();
         }
@@ -85,7 +93,7 @@ class DefaultController extends Controller
     public function actionConfirm($auth_key)
     {
         $model = $this->findModel(true);
-        if ($auth_key && $user = $model::findOne(compact('auth_key'))) {
+        if ($auth_key && ($user = $model::findOne(compact('auth_key')))) {
             Yii::$app->session->setFlash("success", Yii::t('modules/user', "You have successfully completed your registration."));
             Yii::$app->user->login($user);
             $user->activate();
