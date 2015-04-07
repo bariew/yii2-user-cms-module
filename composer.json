@@ -11,7 +11,8 @@
         }
     ],
     "require" : {
-        "bariew/yii2-tools": "dev-master"
+        "bariew/yii2-tools": "dev-master",
+        "yiisoft/yii2-authclient": "~2.0.0"
     },
     "autoload": {
         "psr-4": {

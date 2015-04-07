@@ -33,59 +33,6 @@ class User extends ActiveRecord implements IdentityInterface
 
     const STATUS_INACTIVE = 0;
     const STATUS_ACTIVE   = 10;
-
-    /**
-     * gets all available user status list
-     * @return array statuses
-     */
-    public static function statusList()
-    {
-        return [
-            self::STATUS_INACTIVE => Yii::t('modules/user', 'Deactivated'),
-            self::STATUS_ACTIVE   => Yii::t('modules/user', 'Active')
-        ];
-    }
-
-    /**
-     * Gets model readabe status name.
-     * @return string
-     */
-    public function getStatusName()
-    {
-        return self::statusList()[$this->status];
-    }
-
-    /**
-     * Activetes user.
-     * @return boolean
-     */
-    public function activate()
-    {
-        return $this->updateAttributes([
-            'status' => self::STATUS_ACTIVE,
-            'auth_key' => null
-        ]);
-    }
-    
-    /**
-     * 
-     * @return type
-     */
-    public function isActive()
-    {
-        return $this->status == self::STATUS_ACTIVE;
-    }
-    
-    /**
-     * @inheritdoc
-     */
-    public function behaviors()
-    {
-        return [
-            \yii\behaviors\TimestampBehavior::className(),
-        ];
-    }
-
     /**
      * @inheritdoc
      */
@@ -117,9 +64,64 @@ class User extends ActiveRecord implements IdentityInterface
         ];
     }
 
+    /**
+     * @inheritdoc
+     */
     public static function tableName()
     {
         return '{{user_user}}';
+    }
+
+    /**
+     * gets all available user status list
+     * @return array statuses
+     */
+    public static function statusList()
+    {
+        return [
+            self::STATUS_INACTIVE => Yii::t('modules/user', 'Deactivated'),
+            self::STATUS_ACTIVE   => Yii::t('modules/user', 'Active')
+        ];
+    }
+
+    /**
+     * Gets model readabe status name.
+     * @return string
+     */
+    public function getStatusName()
+    {
+        return self::statusList()[$this->status];
+    }
+
+    /**
+     * Activates user.
+     * @return boolean
+     */
+    public function activate()
+    {
+        return $this->updateAttributes([
+            'status' => self::STATUS_ACTIVE,
+            'auth_key' => null
+        ]);
+    }
+    
+    /**
+     * 
+     * @return boolean
+     */
+    public function isActive()
+    {
+        return $this->status == self::STATUS_ACTIVE;
+    }
+    
+    /**
+     * @inheritdoc
+     */
+    public function behaviors()
+    {
+        return [
+            \yii\behaviors\TimestampBehavior::className(),
+        ];
     }
     
     /**
@@ -203,7 +205,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public function validatePassword($password)
     {
-        return $this->password == Yii::$app->security->validatePassword($password, $this->generatePassword($password));
+        return Yii::$app->security->validatePassword($password, $this->password);
     }
 
     /**
@@ -254,11 +256,13 @@ class User extends ActiveRecord implements IdentityInterface
         if (!parent::beforeSave($insert)) {
             return false;
         }
-        if ($insert) {
-            if (!$this->api_key) {
-                $this->generateApiKey();
-            }
+        if ($insert && !$this->api_key) {
+            $this->generateApiKey();
+        }
+        if ($insert && !$this->auth_key) {
             $this->generateAuthKey();
+        }
+        if ($insert || $this->isAttributeChanged('password')) {
             $this->password = $this->generatePassword($this['password']);
         }
         return true;

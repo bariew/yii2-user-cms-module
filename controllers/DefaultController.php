@@ -7,10 +7,13 @@
 
 namespace bariew\userModule\controllers;
 
+use bariew\userModule\models\Auth;
 use bariew\userModule\models\LoginForm;
 use bariew\userModule\models\RegisterForm;
+use yii\authclient\AuthAction;
 use yii\web\Controller;
 use bariew\userModule\models\User;
+use yii\authclient\BaseOAuth;
 use Yii;
  
 /**
@@ -31,7 +34,32 @@ class DefaultController extends Controller
     }
 
     /**
+     * @inheritdoc
+     */
+    public function actions()
+    {
+        return [
+            'auth' => [
+                'class' => AuthAction::className(),
+                'successCallback' => [$this, 'authCallback'],
+                'successUrl' => Yii::$app->urlManager->createAbsoluteUrl(['/user/default/login'])
+            ],
+        ];
+    }
+
+    /**
+     * @param BaseOAuth $client
+     */
+    public function authCallback(BaseOAuth $client)
+    {
+        $user = Auth::clientUser($client);
+        (new LoginForm(['username' => $user->username]))->login(false);
+    }
+
+    /**
      * Renders login form.
+     * @param string $view
+     * @param bool $partial
      * @return string view.
      */
     public function actionLogin($view = 'login', $partial = false)
@@ -93,6 +121,9 @@ class DefaultController extends Controller
     public function actionConfirm($auth_key)
     {
         $model = $this->findModel(true);
+        /**
+         * @var User $user
+         */
         if ($auth_key && ($user = $model::findOne(compact('auth_key')))) {
             Yii::$app->session->setFlash("success", Yii::t('modules/user', "You have successfully completed your registration."));
             Yii::$app->user->login($user);
