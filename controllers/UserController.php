@@ -56,7 +56,6 @@ class UserController extends Controller
     public function actionCreate()
     {
         $model = $this->findModel(null);
-        $model->scenario = 'root';
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
@@ -75,7 +74,6 @@ class UserController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        $model->scenario = 'root';
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
@@ -108,15 +106,13 @@ class UserController extends Controller
     protected function findModel($id, $search = false)
     {
         if ($search) {
-            return new UserSearch();
-        }
-        if (!$id) {
-            return new User();
-        }
-        if (($model = User::findOne($id)) !== null) {
-            return $model;
-        } else {
+            $model = new UserSearch();
+        } elseif (!$id) {
+            $model = new User();
+        } elseif (!$model = User::findOne($id)) {
             throw new NotFoundHttpException(\Yii::t('modules/user', 'User not found'));
         }
+        $model->scenario = 'root';
+        return $model;
     }
 }
