@@ -42,7 +42,7 @@ class User extends ActiveRecord implements IdentityInterface
             ['status', 'default', 'value' => self::STATUS_ACTIVE],
             ['status', 'in', 'range' => array_keys($this->statusList()), 'on' => 'root'],
             ['username', 'filter', 'filter' => 'trim'],
-            [['email', 'username'], 'required'],
+            [['email', 'username', 'password'], 'required'],
             [['email', 'username', 'api_key'], 'unique'],
             [['username', 'company_name', 'password'], 'string', 'min' => 2, 'max' => 255],
             ['email', 'filter', 'filter' => 'trim'],
@@ -123,7 +123,7 @@ class User extends ActiveRecord implements IdentityInterface
             \yii\behaviors\TimestampBehavior::className(),
         ];
     }
-    
+
     /**
      * @inheritdoc
      */
