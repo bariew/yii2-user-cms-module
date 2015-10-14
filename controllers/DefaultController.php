@@ -30,7 +30,7 @@ class DefaultController extends Controller
      */
     public function getLoginRedirect()
     {
-        return null;
+        return ["/"];
     }
 
     /**
@@ -69,9 +69,7 @@ class DefaultController extends Controller
         }
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return ($url = $this->getLoginRedirect())
-                ? $this->redirect($url) 
-                : $this->goBack();
+            return $this->redirect($this->getLoginRedirect());
         }
         if (\Yii::$app->request->isAjax || $partial) {
             return $this->renderAjax($view, compact('model'));
