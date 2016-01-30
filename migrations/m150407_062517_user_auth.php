@@ -2,12 +2,13 @@
 
 use yii\db\Schema;
 use yii\db\Migration;
+use app\modules\user\models\Auth;
 
 class m150407_062517_user_auth extends Migration
 {
     public function up()
     {
-        return $this->createTable('user_auth', [
+        $this->createTable(Auth::tableName(), [
             'id' => Schema::TYPE_PK,
             'user_id' => Schema::TYPE_INTEGER,
             'name' => Schema::TYPE_SMALLINT,
@@ -19,6 +20,6 @@ class m150407_062517_user_auth extends Migration
 
     public function down()
     {
-        return $this->dropTable('user_auth');
+        $this->dropTable(Auth::tableName());
     }
 }

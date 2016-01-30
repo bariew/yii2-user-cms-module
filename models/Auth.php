@@ -24,7 +24,7 @@ class Auth extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return 'user_auth';
+        return '{{%user_auth}}';
     }
 
     /**

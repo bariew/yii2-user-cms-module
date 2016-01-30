@@ -32,6 +32,6 @@ class m140417_081329_user_user extends \yii\db\Migration
 
     public function down()
     {
-        return $this->dropTable(User::tableName());
+        $this->dropTable(User::tableName());
     }
 }
