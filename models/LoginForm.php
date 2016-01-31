@@ -22,7 +22,7 @@ class LoginForm extends Model
     public $password;
     public $rememberMe = true;
 
-    private $_user = false;
+    protected $_user = false;
 
     /**
      * @inheritdoc
@@ -48,7 +48,7 @@ class LoginForm extends Model
             'active'    => Yii::t('modules/user', 'Active'),
             'username'    => Yii::t('modules/user', 'Username'),
             'rememberMe'    => Yii::t('modules/user', 'Remember me'),
-            'active'    => Yii::t('modules/user', 'Active'),
+            'password'    => Yii::t('modules/user', 'Password'),
         ];
     }
 
