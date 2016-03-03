@@ -123,13 +123,15 @@ class DefaultController extends Controller
          * @var User $user
          */
         if ($auth_key && ($user = $model::findOne(compact('auth_key')))) {
-            Yii::$app->session->setFlash("success", Yii::t('modules/user', "You have successfully completed your registration."));
+            Yii::$app->session->setFlash("success", Yii::t('modules/user',
+                "You have successfully completed your registration. Please set your password."));
             Yii::$app->user->login($user);
             $user->activate();
         }else{
             Yii::$app->session->setFlash("error", Yii::t('modules/user', "Your auth link is invalid."));
+            return $this->goHome();
         }
-        return $this->goHome();
+        $this->redirect(['update']);
     }
     
     /**
