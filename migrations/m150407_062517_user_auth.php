@@ -2,7 +2,7 @@
 
 use yii\db\Schema;
 use yii\db\Migration;
-use app\modules\user\models\Auth;
+use bariew\userModule\models\Auth;
 
 class m150407_062517_user_auth extends Migration
 {
