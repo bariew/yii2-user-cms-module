@@ -9,15 +9,16 @@ namespace bariew\userModule\models;
 
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-
+use bariew\userModule\models\User;
+ 
 /**
- * For searchin users.
+ * For searching companies.
  * 
  * 
  * @example
  * @author Pavel Bariev <bariew@yandex.ru>
  */
-class UserSearch extends User
+class CompanySearch extends Company
 {
     /**
      * @inheritdoc
@@ -25,8 +26,7 @@ class UserSearch extends User
     public function rules()
     {
         return [
-            [['id', 'created_at', 'updated_at', 'email', 'password', 'username', 'owner_id'], 'safe'],
-            [['status'], 'integer'],
+            [['title', 'description', 'owner_id'], 'safe'],
         ];
     }
 
@@ -46,7 +46,7 @@ class UserSearch extends User
      */
     public function search($params)
     {
-        $query = User::find();
+        $query = Company::find();
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -56,16 +56,9 @@ class UserSearch extends User
             return $dataProvider;
         }
 
-        $query->andFilterWhere(['status' => $this->status])
-            ->andFilterWhere(['like', 'id', $this->id])
-            ->andFilterWhere(['like', 'email', $this->email])
-            ->andFilterWhere(['like', 'password', $this->password])
-            ->andFilterWhere(['like', 'username', $this->username])
-            ->andFilterWhere([
-                'like', 'DATE_FORMAT(FROM_UNIXTIME(created_at), "%Y-%m-%d")', $this->created_at
-            ])->andFilterWhere([
-                'like', 'DATE_FORMAT(FROM_UNIXTIME(updated_at), "%Y-%m-%d")', $this->updated_at
-            ])
+        $query->andWhere(['owner_id' => $this->owner_id])
+            ->andFilterWhere(['like', 'title', $this->title])
+            ->andFilterWhere(['like', 'description', $this->description])
             ;
 
         return $dataProvider;

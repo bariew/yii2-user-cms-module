@@ -19,7 +19,7 @@ use Yii;
  * 
  * @property integer $id
  * @property string $username
- * @property string $company_name
+ * @property integer $owner_id
  * @property string $auth_key
  * @property string $api_key
  * @property string $email
@@ -39,12 +39,12 @@ class User extends ActiveRecord implements IdentityInterface
     public function rules()
     {
         return [
-            ['status', 'default', 'value' => self::STATUS_ACTIVE],
-            ['status', 'in', 'range' => array_keys($this->statusList()), 'on' => 'root'],
+            ['status', 'default', 'value' => static::STATUS_ACTIVE],
+            ['owner_id', 'safe', 'when' => function($model){ return !$model->owner_id;}],
             ['username', 'filter', 'filter' => 'trim'],
             [['email', 'username', 'password'], 'required'],
             [['email', 'username', 'api_key'], 'unique'],
-            [['username', 'company_name', 'password'], 'string', 'min' => 2, 'max' => 255],
+            [['username', 'password'], 'string', 'min' => 2, 'max' => 255],
             ['email', 'filter', 'filter' => 'trim'],
             ['email', 'email'],
         ];
@@ -58,7 +58,7 @@ class User extends ActiveRecord implements IdentityInterface
         return [
             'email'        => Yii::t('modules/user', 'Email'),
             'username'     => Yii::t('modules/user', 'Login'),
-            'company_name' => Yii::t('modules/user', 'Company name'),
+            'owner_id'     => Yii::t('modules/user', 'Owner ID'),
             'auth_key'     => Yii::t('modules/user', 'Auth key'),
             'api_key'      => Yii::t('modules/user', 'Api key'),
         ];
@@ -79,9 +79,18 @@ class User extends ActiveRecord implements IdentityInterface
     public static function statusList()
     {
         return [
-            self::STATUS_INACTIVE => Yii::t('modules/user', 'Deactivated'),
-            self::STATUS_ACTIVE   => Yii::t('modules/user', 'Active')
+            static::STATUS_INACTIVE => Yii::t('modules/user', 'Deactivated'),
+            static::STATUS_ACTIVE   => Yii::t('modules/user', 'Active')
         ];
+    }
+
+    /**
+     * Available company list
+     * @return array
+     */
+    public static function companyList()
+    {
+        return Company::find()->select('title')->indexBy('id')->column();
     }
 
     /**
@@ -90,7 +99,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public function getStatusName()
     {
-        return self::statusList()[$this->status];
+        return static::statusList()[$this->status];
     }
 
     /**
@@ -100,7 +109,7 @@ class User extends ActiveRecord implements IdentityInterface
     public function activate()
     {
         return $this->updateAttributes([
-            'status' => self::STATUS_ACTIVE,
+            'status' => static::STATUS_ACTIVE,
             'auth_key' => null
         ]);
     }
@@ -111,7 +120,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public function isActive()
     {
-        return $this->status == self::STATUS_ACTIVE;
+        return $this->status == static::STATUS_ACTIVE;
     }
     
     /**
@@ -148,7 +157,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public static function findByUsername($username)
     {
-        return static::findOne(['username' => $username, 'status' => self::STATUS_ACTIVE]);
+        return static::findOne(['username' => $username, 'status' => static::STATUS_ACTIVE]);
     }
 
     /**
@@ -169,7 +178,7 @@ class User extends ActiveRecord implements IdentityInterface
 
         return static::findOne([
             'password_reset_token' => $token,
-            'status'               => self::STATUS_ACTIVE,
+            'status'               => static::STATUS_ACTIVE,
         ]);
     }
 

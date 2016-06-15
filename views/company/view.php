@@ -5,14 +5,14 @@ use yii\widgets\DetailView;
 
 /**
  * @var yii\web\View $this
- * @var bariew\userModule\models\User $model
+ * @var bariew\userModule\models\Company $model
  */
 
-$this->title = Yii::t('modules/user', 'User #{id}', ['id' => $model->id]);
-$this->params['breadcrumbs'][] = ['label' => Yii::t('modules/user', 'Users'), 'url' => ['index']];
+$this->title = Yii::t('modules/user', 'Company #{id}', ['id' => $model->id]);
+$this->params['breadcrumbs'][] = ['label' => Yii::t('modules/user', 'Company'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="user-view">
+<div class="company-view">
 
     <h1><?php echo Html::encode($this->title) ?></h1>
 
@@ -30,11 +30,8 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php echo DetailView::widget([
         'model' => $model,
         'attributes' => [
-            'email:email',
-            'username',
-            'statusName',
-            'created_at:datetime',
-            'updated_at:datetime',
+            'title',
+            'description',
         ],
     ]) ?>
 

@@ -13,17 +13,19 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
+    <?php if(!$model->owner_id) : ?>
+        <?= $form->field($model, 'owner_id')->dropDownList($model::companyList()) ?>
+    <?php endif; ?>
+
     <?php echo $form->field($model, 'status')->dropDownList($model->statusList()) ?>
 
     <?php echo $form->field($model, 'username')->textInput(['maxlength' => 255]) ?>
-
-    <?php echo $form->field($model, 'company_name')->textInput(['maxlength' => 255]) ?>
 
     <?php echo $form->field($model, 'password')->passwordInput(['maxlength' => 255]) ?>
 
     <?php echo $form->field($model, 'email')->textInput(['maxlength' => 255]) ?>
 
-    <div class="form-group">
+    <div class="form-group pull-right">
         <?php echo Html::submitButton($model->isNewRecord
                 ? Yii::t('modules/user', 'Create') : Yii::t('modules/user', 'Update'),
             ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

@@ -25,7 +25,8 @@ class Module extends \yii\base\Module
                   'items' => [
                       ['label'    => 'Profile', 'url' => ['/user/default/update']],
                       ['label'    => 'Logout', 'url' => ['/user/default/logout']],
-                      ['label'    => 'All users', 'url' => ['/user/user/index']]
+                      ['label'    => 'All users', 'url' => ['/user/user/index']],
+                      ['label'    => 'All companies', 'url' => ['/user/company/index']],
                   ]
               ];
         parent::init();

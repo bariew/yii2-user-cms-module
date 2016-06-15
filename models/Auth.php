@@ -49,10 +49,10 @@ class Auth extends \yii\db\ActiveRecord
             'service_id' => $client->id
         ];
         /**
-         * @var self $model
+         * @var static $model
          */
-        if (!$model = self::findOne($attributes)) {
-            $model = new self(array_merge($attributes, [
+        if (!$model = static::findOne($attributes)) {
+            $model = new static(array_merge($attributes, [
                 'created_at' => time(),
                 'data' => json_encode($client->getUserAttributes())
             ]));
@@ -73,6 +73,6 @@ class Auth extends \yii\db\ActiveRecord
      */
     public function getUser()
     {
-        return self::hasOne(User::className(), ['id'=> 'user_id']);
+        return static::hasOne(User::className(), ['id'=> 'user_id']);
     }
 }

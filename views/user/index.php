@@ -14,11 +14,10 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="user-index">
 
-    <h1><?php echo Html::encode($this->title) ?></h1>
-
-    <p>
-        <?php echo Html::a(Yii::t('modules/user', 'Create User'), ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
+    <h1>
+        <?php echo Html::encode($this->title) ?>
+        <?php echo Html::a(Yii::t('modules/user', 'Create User'), ['create'], ['class' => 'btn btn-success pull-right']) ?>
+    </h1>
 
     <?php echo GridView::widget([
         'dataProvider' => $dataProvider,
