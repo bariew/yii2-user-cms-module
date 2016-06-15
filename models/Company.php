@@ -7,6 +7,7 @@
 
 namespace bariew\userModule\models;
 
+use bariew\abstractModule\models\AbstractModel;
 use yii\base\Event;
 use yii\db\ActiveRecord;
 use Yii;
@@ -21,18 +22,11 @@ use Yii;
  * @property string $title
  * @property string $description
  * @property integer $owner_id
+ *
+ * @property User[] $users
  */
-class Company extends ActiveRecord
+class Company extends AbstractModel
 {
-
-    /**
-     * @inheritdoc
-     */
-    public static function tableName()
-    {
-        return '{{%user_company}}';
-    }
-
     /**
      * @inheritdoc
      */
@@ -57,6 +51,19 @@ class Company extends ActiveRecord
         ];
     }
 
+    /**
+     * return \yii\db\ActiveQuery
+     */
+    public function getUsers()
+    {
+        return static::hasMany(User::childClass(), ['owner_id' => 'id']);
+    }
+
+    /**
+     * Add it to your app event handlers for ActiveRecords
+     * Sets active record owner_id
+     * @param Event $event
+     */
     public static function childInit(Event $event)
     {
         /** @var ActiveRecord $model */

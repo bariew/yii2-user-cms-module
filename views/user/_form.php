@@ -14,7 +14,7 @@ use yii\widgets\ActiveForm;
     <?php $form = ActiveForm::begin(); ?>
 
     <?php if(!$model->owner_id) : ?>
-        <?= $form->field($model, 'owner_id')->dropDownList($model::companyList()) ?>
+        <?= $form->field($model, 'owner_id')->dropDownList($model->companyList()) ?>
     <?php endif; ?>
 
     <?php echo $form->field($model, 'status')->dropDownList($model->statusList()) ?>

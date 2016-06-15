@@ -42,9 +42,6 @@ class Module extends \yii\base\Module
         if (!(Yii::$app instanceof Application)) {
             return false;
         }
-        if (!Yii::$app->db->getTableSchema(User::tableName())) {
-            return false;
-        }
         try {
             $identityClass = Yii::$app->user->identityClass;
         } catch (\Exception $e) {
@@ -56,15 +53,5 @@ class Module extends \yii\base\Module
         }
 
         return !Yii::$app->user->isGuest;
-    }
-
-    public function install()
-    {
-        \app\config\ConfigManager::set(['components', 'user', 'identityClass'], User::className());
-    }
-
-    public function uninstall()
-    {
-        \app\config\ConfigManager::set(['components', 'user', 'identityClass'], '');
     }
 }

@@ -2,6 +2,7 @@
 
 namespace bariew\userModule\models;
 
+use bariew\abstractModule\models\AbstractModel;
 use Yii;
 use yii\authclient\BaseOAuth;
 
@@ -17,16 +18,8 @@ use yii\authclient\BaseOAuth;
  *
  * @property User $user
  */
-class Auth extends \yii\db\ActiveRecord
+class Auth extends AbstractModel
 {
-    /**
-     * @inheritdoc
-     */
-    public static function tableName()
-    {
-        return '{{%user_auth}}';
-    }
-
     /**
      * @inheritdoc
      */
@@ -57,9 +50,12 @@ class Auth extends \yii\db\ActiveRecord
                 'data' => json_encode($client->getUserAttributes())
             ]));
             $model->save(false);
-            $user = new User([
+            /** @var User $userClass */
+            $userClass = User::childClass();
+            /** @var User $user */
+            $user = new $userClass([
                 'username' => $model->name . $model->id,
-                'status' => User::STATUS_ACTIVE
+                'status' => $userClass::STATUS_ACTIVE
             ]);
             $user->save(false);
             $model->updateAttributes(['user_id' => $user->id]);
@@ -73,6 +69,6 @@ class Auth extends \yii\db\ActiveRecord
      */
     public function getUser()
     {
-        return static::hasOne(User::className(), ['id'=> 'user_id']);
+        return static::hasOne(User::childClass(), ['id'=> 'user_id']);
     }
 }

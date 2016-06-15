@@ -7,10 +7,10 @@
 
 namespace bariew\userModule\controllers;
 
+use bariew\abstractModule\controllers\AbstractModelController;
 use Yii;
 use bariew\userModule\models\Company;
 use bariew\userModule\models\CompanySearch;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
  
 /**
@@ -19,7 +19,7 @@ use yii\web\NotFoundHttpException;
  * 
  * @author Pavel Bariev <bariew@yandex.ru>
  */
-class CompanyController extends Controller
+class CompanyController extends AbstractModelController
 {
     /**
      * Lists all User models.
@@ -98,23 +98,4 @@ class CompanyController extends Controller
         return $this->redirect(['index']);
     }
 
-    /**
-     * Finds the User model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param string $id
-     * @param bool $search
-     * @return Company|CompanySearch the loaded model
-     * @throws NotFoundHttpException
-     */
-    protected function findModel($id, $search = false)
-    {
-        if ($search) {
-            $model = new CompanySearch();
-        } elseif (!$id) {
-            $model = new Company();
-        } elseif (!$model = Company::findOne($id)) {
-            throw new NotFoundHttpException(\Yii::t('modules/user', 'User not found'));
-        }
-        return $model;
-    }
 }

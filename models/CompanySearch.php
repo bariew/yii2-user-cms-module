@@ -9,8 +9,7 @@ namespace bariew\userModule\models;
 
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use bariew\userModule\models\User;
- 
+
 /**
  * For searching companies.
  * 
@@ -44,9 +43,11 @@ class CompanySearch extends Company
      * @param array $params search query data
      * @return ActiveDataProvider
      */
-    public function search($params)
+    public function search($params = [])
     {
-        $query = Company::find();
+        /** @var Company $class */
+        $class = static::parentClass();
+        $query = (new $class())->search();
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,

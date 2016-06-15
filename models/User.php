@@ -7,7 +7,7 @@
 
 namespace bariew\userModule\models;
 
-use yii\db\ActiveRecord;
+use bariew\abstractModule\models\AbstractModel;
 use yii\web\IdentityInterface;
 use Yii;
  
@@ -27,8 +27,10 @@ use Yii;
  * @property integer $created_at
  * @property integer $updated_at
  * @property string $password write-only password
+ *
+ * @property Company $company
  */
-class User extends ActiveRecord implements IdentityInterface
+class User extends AbstractModel implements IdentityInterface
 {
 
     const STATUS_INACTIVE = 0;
@@ -65,14 +67,6 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
     /**
-     * @inheritdoc
-     */
-    public static function tableName()
-    {
-        return '{{%user_user}}';
-    }
-
-    /**
      * gets all available user status list
      * @return array statuses
      */
@@ -88,13 +82,22 @@ class User extends ActiveRecord implements IdentityInterface
      * Available company list
      * @return array
      */
-    public static function companyList()
+    public function companyList()
     {
-        return Company::find()->select('title')->indexBy('id')->column();
+        $class = Company::childClass();
+        return $class::find()->select('title')->indexBy('id')->column();
     }
 
     /**
-     * Gets model readabe status name.
+     * return \yii\db\ActiveQuery
+     */
+    public function getCompany()
+    {
+        return static::hasOne(Company::childClass(), ['id' => 'owner_id']);
+    }
+
+    /**
+     * Gets model readable status name.
      * @return string
      */
     public function getStatusName()

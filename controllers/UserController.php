@@ -7,10 +7,10 @@
 
 namespace bariew\userModule\controllers;
 
+use bariew\abstractModule\controllers\AbstractModelController;
 use Yii;
 use bariew\userModule\models\User;
 use bariew\userModule\models\UserSearch;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
  
 /**
@@ -19,7 +19,7 @@ use yii\web\NotFoundHttpException;
  * 
  * @author Pavel Bariev <bariew@yandex.ru>
  */
-class UserController extends Controller
+class UserController extends AbstractModelController
 {
     /**
      * Lists all User models.
@@ -96,25 +96,5 @@ class UserController extends Controller
         $this->findModel($id)->delete();
         Yii::$app->session->setFlash('success', Yii::t('app', 'Successfully deleted'));
         return $this->redirect(['index']);
-    }
-
-    /**
-     * Finds the User model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param string $id
-     * @param bool $search
-     * @return User|UserSearch the loaded model
-     * @throws NotFoundHttpException
-     */
-    protected function findModel($id, $search = false)
-    {
-        if ($search) {
-            $model = new UserSearch();
-        } elseif (!$id) {
-            $model = new User();
-        } elseif (!$model = User::findOne($id)) {
-            throw new NotFoundHttpException(\Yii::t('modules/user', 'User not found'));
-        }
-        return $model;
     }
 }

@@ -44,9 +44,12 @@ class UserSearch extends User
      * @param array $params search query data
      * @return ActiveDataProvider
      */
-    public function search($params)
+    public function search($params = [])
     {
-        $query = User::find();
+        /** @var User $class */
+        $class = static::parentClass();
+        /** @var \yii\db\ActiveQuery $query */
+        $query = (new $class())->search();
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
